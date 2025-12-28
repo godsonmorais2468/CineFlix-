@@ -44,9 +44,9 @@ class SubscriptionPlans(BaseClass):
 
     quality = models.CharField(max_length=30,choices=QualityChoices.choices)
 
-    no_of_screens = models.CharField(choices=ScreenOrDownloadDeviceChoices.choices)
+    no_of_screens = models.IntegerField(choices=ScreenOrDownloadDeviceChoices.choices)
 
-    download_devices = models.CharField(choices=ScreenOrDownloadDeviceChoices.choices)
+    download_devices = models.IntegerField(choices=ScreenOrDownloadDeviceChoices.choices)
 
     class Meta:
 
@@ -57,3 +57,25 @@ class SubscriptionPlans(BaseClass):
     def __str__(self):
 
         return self.name
+    
+class UserSubscriptions(BaseClass):
+
+    profile = models.ForeignKey('authentication.Profile',on_delete=models.CASCADE)
+
+    plan = models.ForeignKey('SubscriptionPlans',on_delete=models.CASCADE)
+
+    start_date = models.DateTimeField(null=True,blank=True)
+
+    end_date = models.DateTimeField(null=True,blank=True)
+
+    active = models.BooleanField(default=False)
+
+    class Meta:
+
+        verbose_name = 'User Subscription'
+
+        verbose_name_plural = 'User Subscription'
+
+    def __str__(self):
+
+        return f'{self.profile.username}-{self.plan.name}'
